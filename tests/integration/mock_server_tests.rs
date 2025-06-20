@@ -77,8 +77,19 @@ async fn test_tts_list_voices() {
 async fn test_expression_measurement_create_job() {
     let mock_server = MockServer::start().await;
     
+    // Mock the POST response - returns only job_id
     Mock::given(method("POST"))
         .and(path("/v0/batch/jobs"))
+        .and(header("X-Hume-Api-Key", "test-key"))
+        .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+            "job_id": "job-123"
+        })))
+        .mount(&mock_server)
+        .await;
+    
+    // Mock the GET response - returns full job details
+    Mock::given(method("GET"))
+        .and(path("/v0/batch/jobs/job-123"))
         .and(header("X-Hume-Api-Key", "test-key"))
         .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
             "job_id": "job-123",

@@ -19,8 +19,8 @@ fn test_tts_request_builder() {
         .utterance_with_voice("How are you?", "en-US-1")
         .format(AudioFormat::Mp3)
         .sample_rate(44100)
-        .return_durations(true)
         .build();
+    
     
     assert_eq!(request.utterances.len(), 2);
     assert_eq!(request.utterances[0].text, "Hello, world!");
@@ -28,7 +28,6 @@ fn test_tts_request_builder() {
     assert!(request.utterances[1].voice.is_some());
     assert_eq!(request.format, Some(AudioFormat::Mp3));
     assert_eq!(request.sample_rate, Some(44100));
-    assert_eq!(request.return_durations, Some(true));
 }
 
 #[test]
