@@ -1,0 +1,91 @@
+[package]
+name = "hume"
+version = "0.9.0"
+edition = "2021"
+authors = ["Hume AI"]
+description = "Rust SDK for Hume AI APIs"
+license = "MIT"
+repository = "https://github.com/HumeAI/hume-rust-sdk"
+keywords = ["hume", "ai", "emotion", "voice", "tts"]
+categories = ["api-bindings", "web-programming"]
+
+[dependencies]
+# HTTP client
+reqwest = { version = "0.12", features = ["json", "stream", "multipart", "rustls-tls"] }
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+# JSON serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+# WebSocket support
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
+futures-util = "0.3"
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+# Base64 encoding
+base64 = "0.22"
+# URL handling
+url = "2.5"
+# Logging
+tracing = "0.1"
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+# UUID generation
+uuid = { version = "1.11", features = ["v4", "serde"] }
+# Retry logic
+backoff = { version = "0.4", features = ["tokio"] }
+# Environment variables
+dotenvy = "0.15"
+# Async trait
+async-trait = "0.1"
+# Bytes handling
+bytes = "1.7"
+# HTTP multipart already included in reqwest features
+
+[dev-dependencies]
+# Testing
+tokio-test = "0.4"
+wiremock = "0.6"
+pretty_assertions = "1.4"
+# Test utilities
+tempfile = "3.13"
+# Async testing
+futures = "0.3"
+
+[features]
+default = ["rustls"]
+rustls = ["reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-native-roots"]
+native-tls = ["reqwest/native-tls", "tokio-tungstenite/native-tls"]
+
+[[example]]
+name = "tts_basic"
+path = "examples/tts_basic.rs"
+
+[[example]]
+name = "tts_streaming"
+path = "examples/tts_streaming.rs"
+
+[[example]]
+name = "evi_chat"
+path = "examples/evi_chat.rs"
+
+[[example]]
+name = "evi_tools"
+path = "examples/evi_tools.rs"
+
+[[example]]
+name = "evi_configs"
+path = "examples/evi_configs.rs"
+
+[[example]]
+name = "expression_measurement"
+path = "examples/expression_measurement.rs"
+
+[[example]]
+name = "expression_measurement_stream"
+path = "examples/expression_measurement_stream.rs"
+
+[[example]]
+name = "expression_measurement_files"
+path = "examples/expression_measurement_files.rs"
