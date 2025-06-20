@@ -18,7 +18,7 @@ pub struct TtsRequest {
     
     /// Sample rate (for PCM format)
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub sample_rate: Option<u32>,
+    pub sample_rate: Option<SampleRate>,
 }
 
 impl Default for TtsRequest {
@@ -116,6 +116,53 @@ impl Default for AudioFormat {
     }
 }
 
+/// Common sample rates for audio
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(transparent)]
+pub struct SampleRate(u32);
+
+impl SampleRate {
+    /// 8 kHz - Telephone quality
+    pub const HZ_8000: Self = Self(8000);
+    
+    /// 16 kHz - Wideband audio
+    pub const HZ_16000: Self = Self(16000);
+    
+    /// 22.05 kHz - Half of CD quality
+    pub const HZ_22050: Self = Self(22050);
+    
+    /// 24 kHz - Professional audio
+    pub const HZ_24000: Self = Self(24000);
+    
+    /// 44.1 kHz - CD quality
+    pub const HZ_44100: Self = Self(44100);
+    
+    /// 48 kHz - Professional/DVD quality
+    pub const HZ_48000: Self = Self(48000);
+    
+    /// Create a custom sample rate
+    pub const fn custom(rate: u32) -> Self {
+        Self(rate)
+    }
+    
+    /// Get the raw sample rate value
+    pub const fn as_u32(&self) -> u32 {
+        self.0
+    }
+}
+
+impl From<SampleRate> for u32 {
+    fn from(rate: SampleRate) -> Self {
+        rate.0
+    }
+}
+
+impl Default for SampleRate {
+    fn default() -> Self {
+        Self::HZ_24000 // Default to 24kHz as per API docs
+    }
+}
+
 /// TTS synthesis response
 #[derive(Debug, Clone, Deserialize)]
 pub struct TtsResponse {
@@ -162,7 +209,7 @@ pub struct TtsStreamRequest {
     
     /// Sample rate (for PCM)
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub sample_rate: Option<u32>,
+    pub sample_rate: Option<SampleRate>,
     
     /// Enable instant streaming
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -242,6 +289,18 @@ pub struct Voice {
 }
 
 /// Builder for TTS requests
+/// 
+/// # Example
+/// 
+/// ```no_run
+/// use hume::tts::models::{TtsRequestBuilder, AudioFormat, SampleRate};
+/// 
+/// let request = TtsRequestBuilder::new()
+///     .utterance("Hello, world!")
+///     .format(AudioFormat::Wav)
+///     .sample_rate(SampleRate::HZ_44100)
+///     .build();
+/// ```
 pub struct TtsRequestBuilder {
     request: TtsRequest,
 }
@@ -319,7 +378,7 @@ impl TtsRequestBuilder {
     }
 
     /// Set sample rate
-    pub fn sample_rate(mut self, rate: u32) -> Self {
+    pub fn sample_rate(mut self, rate: SampleRate) -> Self {
         self.request.sample_rate = Some(rate);
         self
     }

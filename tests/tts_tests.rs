@@ -18,7 +18,7 @@ fn test_tts_request_builder() {
         .utterance("Hello, world!")
         .utterance_with_voice("How are you?", "en-US-1")
         .format(AudioFormat::Mp3)
-        .sample_rate(44100)
+        .sample_rate(SampleRate::HZ_44100)
         .build();
     
     
@@ -27,7 +27,7 @@ fn test_tts_request_builder() {
     assert_eq!(request.utterances[1].text, "How are you?");
     assert!(request.utterances[1].voice.is_some());
     assert_eq!(request.format, Some(AudioFormat::Mp3));
-    assert_eq!(request.sample_rate, Some(44100));
+    assert_eq!(request.sample_rate, Some(SampleRate::HZ_44100));
 }
 
 #[test]
@@ -73,7 +73,7 @@ fn test_tts_stream_request() {
         description: Some("Excited".to_string()),
         speed: Some(0.9),
         format: Some(AudioFormat::Wav),
-        sample_rate: Some(22050),
+        sample_rate: Some(SampleRate::HZ_22050),
         instant: Some(true),
     };
     
@@ -91,4 +91,27 @@ fn test_context_creation() {
     
     assert_eq!(context.text, "Previous conversation context");
     assert_eq!(context.voice, Some("context-voice".to_string()));
+}
+
+#[test]
+fn test_sample_rate() {
+    // Test predefined sample rates
+    assert_eq!(SampleRate::HZ_8000.as_u32(), 8000);
+    assert_eq!(SampleRate::HZ_16000.as_u32(), 16000);
+    assert_eq!(SampleRate::HZ_22050.as_u32(), 22050);
+    assert_eq!(SampleRate::HZ_24000.as_u32(), 24000);
+    assert_eq!(SampleRate::HZ_44100.as_u32(), 44100);
+    assert_eq!(SampleRate::HZ_48000.as_u32(), 48000);
+    
+    // Test custom sample rate
+    let custom = SampleRate::custom(32000);
+    assert_eq!(custom.as_u32(), 32000);
+    
+    // Test conversion to u32
+    let rate: u32 = SampleRate::HZ_44100.into();
+    assert_eq!(rate, 44100);
+    
+    // Test serialization
+    let json = serde_json::to_string(&SampleRate::HZ_44100).unwrap();
+    assert_eq!(json, "44100");
 }
