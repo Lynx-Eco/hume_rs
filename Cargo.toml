@@ -48,6 +48,11 @@ bytes = "1.7"
 tokio-test = "0.4"
 wiremock = "0.6"
 pretty_assertions = "1.4"
+# Audio I/O for examples
+cpal = "0.15"
+rodio = "0.19"
+hound = "3.5"
+ringbuf = "0.3"
 # Test utilities
 tempfile = "3.13"
 # Async testing
@@ -65,6 +70,26 @@ path = "examples/tts_basic.rs"
 [[example]]
 name = "tts_streaming"
 path = "examples/tts_streaming.rs"
+
+[[example]]
+name = "tts_comprehensive"
+path = "examples/tts_comprehensive.rs"
+
+[[example]]
+name = "demo_all_features"
+path = "examples/demo_all_features.rs"
+
+[[example]]
+name = "evi_debug"
+path = "examples/evi_debug.rs"
+
+[[example]]
+name = "evi_test_simple"
+path = "examples/evi_test_simple.rs"
+
+[[example]]
+name = "test_connection"
+path = "examples/test_connection.rs"
 
 [[example]]
 name = "evi_chat"
@@ -89,3 +114,15 @@ path = "examples/expression_measurement_stream.rs"
 [[example]]
 name = "expression_measurement_files"
 path = "examples/expression_measurement_files.rs"
+
+[[example]]
+name = "evi_chat_demo"
+path = "examples/evi_chat_demo.rs"
+
+[[example]]
+name = "evi_conversation_mac"
+path = "examples/evi_conversation_mac.rs"
+
+[[example]]
+name = "evi_tools_comprehensive"
+path = "examples/evi_tools_comprehensive.rs"

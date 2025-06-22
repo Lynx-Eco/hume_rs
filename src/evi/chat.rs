@@ -327,16 +327,19 @@ pub enum ServerMessage {
     /// Assistant message
     AssistantMessage {
         /// Message ID
-        message_id: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        message_id: Option<String>,
         /// Assistant text
         text: String,
         /// Whether message is complete
+        #[serde(default)]
         is_final: bool,
     },
     /// Audio output
     AudioOutput {
         /// Message ID
-        message_id: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        message_id: Option<String>,
         /// Base64 encoded audio
         data: String,
         /// Audio index
