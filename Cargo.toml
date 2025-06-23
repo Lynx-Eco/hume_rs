@@ -126,3 +126,7 @@ path = "examples/evi_conversation_mac.rs"
 [[example]]
 name = "evi_tools_comprehensive"
 path = "examples/evi_tools_comprehensive.rs"
+
+[[example]]
+name = "evi_connection_test"
+path = "examples/evi_connection_test.rs"
