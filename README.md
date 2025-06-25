@@ -1,9 +1,10 @@
-# Hume AI Rust SDK
+# Hume Rust SDK
 
-The official Rust SDK for Hume AI's APIs, providing idiomatic Rust bindings for:
-- Empathic Voice Interface (EVI)
-- Text-to-Speech (TTS)
-- Expression Measurement
+[![Crates.io](https://img.shields.io/crates/v/hume.svg)](https://crates.io/crates/hume)
+[![Documentation](https://docs.rs/hume/badge.svg)](https://docs.rs/hume)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+Official Rust SDK for Hume AI APIs - Text-to-Speech, Expression Measurement, and Empathic Voice Interface.
 
 ## Installation
 

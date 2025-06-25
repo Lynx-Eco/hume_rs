@@ -11,10 +11,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
     // Initialize the client with your API key
     let api_key = std::env::var("HUME_API_KEY")
-        .unwrap_or_else(|_| {
-            eprintln!("Warning: HUME_API_KEY not set. Using 'dummy' key for local testing.");
-            "dummy".to_string()
-        });
+        .expect("HUME_API_KEY environment variable must be set");
     
     let client = HumeClient::new(api_key)?;
     let tts = TtsClient::from(client);
@@ -58,6 +55,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "00aa8842-a5c5-forty-two-8448-8a5cea7b102e"
         )
         .utterance("This is the second sentence.")
+        .unwrap()
         .format(AudioFormat::Wav)
         .sample_rate(SampleRate::HZ_44100)
         .build();

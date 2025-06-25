@@ -1,0 +1,9 @@
+[build]
+rustdocflags = [
+    "--html-in-header", "docs/header.html",
+    "--extend-css", "docs/custom.css",
+    "--default-theme", "light"
+]
+
+[doc]
+browser = true

@@ -1,0 +1,46 @@
+/* Custom styles for Hume Rust SDK documentation */
+
+/* Brand colors */
+:root {
+    --hume-primary: #6366f1;
+    --hume-secondary: #8b5cf6;
+    --hume-accent: #a78bfa;
+}
+
+/* Logo and branding */
+.logo-container::before {
+    content: "Hume AI";
+    color: var(--hume-primary);
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+
+/* Improve code blocks */
+pre.rust {
+    border-left: 3px solid var(--hume-primary);
+    background-color: #f8f9fa;
+}
+
+/* Highlight important sections */
+.docblock h2 {
+    color: var(--hume-primary);
+    border-bottom: 2px solid var(--hume-accent);
+    padding-bottom: 0.3em;
+}
+
+/* Better examples styling */
+.example-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    margin: 1em 0;
+}
+
+/* Improve navigation */
+.sidebar {
+    background-color: #fafafa;
+}
+
+.sidebar a:hover {
+    background-color: var(--hume-accent);
+    color: white;
+}

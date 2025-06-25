@@ -6,6 +6,8 @@ pub mod error;
 pub mod http;
 pub mod request;
 pub mod response;
+pub mod retry;
+pub mod validation;
 
 pub use auth::{Auth, AuthToken};
 pub use client::{HumeClient, HumeClientBuilder};

@@ -168,6 +168,7 @@ impl CreatePromptRequest {
 }
 
 /// Builder for creating prompt requests
+#[derive(Debug)]
 pub struct CreatePromptRequestBuilder {
     request: CreatePromptRequest,
 }

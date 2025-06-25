@@ -16,7 +16,9 @@ fn test_tts_client_creation() {
 fn test_tts_request_builder() {
     let request = TtsRequestBuilder::new()
         .utterance("Hello, world!")
+        .unwrap()
         .utterance_with_voice("How are you?", "en-US-1")
+        .unwrap()
         .format(AudioFormat::Mp3)
         .sample_rate(SampleRate::HZ_44100)
         .build();

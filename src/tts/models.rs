@@ -1,6 +1,8 @@
 //! Data models for Text-to-Speech API
 
 use serde::{Deserialize, Serialize};
+use crate::core::validation::{validate_text_length, validate_speaking_rate, MAX_TTS_TEXT_LENGTH};
+use crate::core::error::Result;
 
 /// TTS synthesis request
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -301,6 +303,7 @@ pub struct Voice {
 ///     .sample_rate(SampleRate::HZ_44100)
 ///     .build();
 /// ```
+#[derive(Debug)]
 pub struct TtsRequestBuilder {
     request: TtsRequest,
 }
@@ -314,12 +317,14 @@ impl TtsRequestBuilder {
     }
 
     /// Add an utterance
-    pub fn utterance(mut self, text: impl Into<String>) -> Self {
+    pub fn utterance(mut self, text: impl Into<String>) -> Result<Self> {
+        let text = text.into();
+        validate_text_length(&text, MAX_TTS_TEXT_LENGTH, "TTS text")?;
         self.request.utterances.push(Utterance {
-            text: text.into(),
+            text,
             ..Default::default()
         });
-        self
+        Ok(self)
     }
 
     /// Add an utterance with voice name
@@ -327,16 +332,18 @@ impl TtsRequestBuilder {
         mut self,
         text: impl Into<String>,
         voice_name: impl Into<String>,
-    ) -> Self {
+    ) -> Result<Self> {
+        let text = text.into();
+        validate_text_length(&text, MAX_TTS_TEXT_LENGTH, "TTS text")?;
         self.request.utterances.push(Utterance {
-            text: text.into(),
+            text,
             voice: Some(VoiceSpec::Name {
                 name: voice_name.into(),
                 provider: None,
             }),
             ..Default::default()
         });
-        self
+        Ok(self)
     }
     
     /// Add an utterance with voice ID
@@ -357,9 +364,17 @@ impl TtsRequestBuilder {
     }
 
     /// Add a full utterance
-    pub fn add_utterance(mut self, utterance: Utterance) -> Self {
+    pub fn add_utterance(mut self, mut utterance: Utterance) -> Result<Self> {
+        // Validate text
+        validate_text_length(&utterance.text, MAX_TTS_TEXT_LENGTH, "TTS text")?;
+        
+        // Validate and clamp speed if provided
+        if let Some(speed) = utterance.speed {
+            utterance.speed = Some(validate_speaking_rate(speed)?);
+        }
+        
         self.request.utterances.push(utterance);
-        self
+        Ok(self)
     }
 
     /// Set context

@@ -21,6 +21,15 @@ impl HumeClient {
         HumeClientBuilder::new(api_key).build()
     }
 
+    /// Create a new client from environment variables
+    /// 
+    /// Reads the API key from the HUME_API_KEY environment variable
+    pub fn from_env() -> Result<Self> {
+        let api_key = std::env::var("HUME_API_KEY")
+            .map_err(|_| Error::config("HUME_API_KEY environment variable not set"))?;
+        Self::new(api_key)
+    }
+
     /// Create a new client builder
     pub fn builder() -> HumeClientBuilder {
         HumeClientBuilder::default()
@@ -34,6 +43,26 @@ impl HumeClient {
     /// Get a reference to the HTTP client
     pub fn http(&self) -> &HttpClient {
         &self.http
+    }
+
+    /// Get the authentication method
+    pub fn auth(&self) -> Option<&Auth> {
+        self.http.auth.as_ref()
+    }
+
+    /// Create a TTS client
+    pub fn tts(&self) -> crate::tts::TtsClient {
+        crate::tts::TtsClient::from(self.clone())
+    }
+
+    /// Create an Expression Measurement client
+    pub fn expression(&self) -> crate::expression_measurement::ExpressionMeasurementClient {
+        crate::expression_measurement::ExpressionMeasurementClient::from(self.clone())
+    }
+
+    /// Create an EVI client
+    pub fn evi(&self) -> crate::evi::EviClient {
+        crate::evi::EviClient::from(self.clone())
     }
 
     /// Generate an access token using API key and secret key
@@ -68,6 +97,11 @@ impl HumeClientBuilder {
         self
     }
 
+    /// Set the API key (alias for consistency with documentation)
+    pub fn with_api_key(self, api_key: impl Into<String>) -> Self {
+        self.api_key(api_key)
+    }
+
     /// Set the access token
     pub fn access_token(mut self, token: AuthToken) -> Self {
         self.access_token = Some(token);
@@ -75,10 +109,26 @@ impl HumeClientBuilder {
         self
     }
 
+    /// Set the access token (alias for consistency with documentation)
+    pub fn with_access_token(self, token: impl Into<String>) -> Self {
+        let auth_token = AuthToken {
+            access_token: token.into(),
+            token_type: "Bearer".to_string(),
+            expires_in: 3600, // Default 1 hour
+            created_at: chrono::Utc::now(),
+        };
+        self.access_token(auth_token)
+    }
+
     /// Set the base URL (defaults to https://api.hume.ai)
     pub fn base_url(mut self, base_url: impl Into<String>) -> Self {
         self.base_url = Some(base_url.into());
         self
+    }
+
+    /// Set the base URL (alias for consistency with documentation)
+    pub fn with_base_url(self, base_url: impl Into<String>) -> Self {
+        self.base_url(base_url)
     }
 
     /// Set the default request timeout

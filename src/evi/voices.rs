@@ -113,6 +113,7 @@ impl CreateCustomVoiceRequest {
 }
 
 /// Builder for creating custom voice requests
+#[derive(Debug)]
 pub struct CreateCustomVoiceRequestBuilder {
     request: CreateCustomVoiceRequest,
 }

@@ -488,10 +488,10 @@ pub struct PagedResponse<T> {
     pub page_size: u32,
     
     /// Total pages
-    pub total_pages: u32,
+    pub total_pages: Option<u32>,
     
     /// Total items
-    pub total_items: u64,
+    pub total_items: Option<u64>,
     
     /// Page items
     pub items: Vec<T>,
@@ -507,7 +507,11 @@ pub struct ReturnPagedConfigs {
     pub page_size: Option<u32>,
     
     /// Total pages
-    pub total_pages: u32,
+    pub total_pages: Option<u32>,
+    
+    /// Total items
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_items: Option<u64>,
     
     /// List of configs
     pub configs_page: Option<Vec<Config>>,

@@ -2,12 +2,23 @@
 name = "hume"
 version = "0.9.0"
 edition = "2021"
-authors = ["Hume AI"]
-description = "Rust SDK for Hume AI APIs"
+authors = ["Hume AI <support@hume.ai>"]
+description = "Rust SDK for Hume AI APIs - Text-to-Speech, Expression Measurement, and Empathic Voice Interface"
+documentation = "https://docs.rs/hume"
+homepage = "https://www.hume.ai"
 license = "MIT"
+readme = "README.md"
 repository = "https://github.com/HumeAI/hume-rust-sdk"
 keywords = ["hume", "ai", "emotion", "voice", "tts"]
-categories = ["api-bindings", "web-programming"]
+categories = ["api-bindings", "web-programming", "multimedia::audio", "science::neuroscience"]
+exclude = [
+    ".github/",
+    ".gitignore",
+    ".env*",
+    "examples/output_*",
+    "**/*.wav",
+    "**/*.mp3",
+]
 
 [dependencies]
 # HTTP client

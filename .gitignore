@@ -1,3 +1,37 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
 .env
-/target
+.env.*
+
+# Test outputs
+*.wav
 *.mp3
+*.mp4
+*.jpg
+*.png
+output_*
+
+# Debug
+*.pdb
+
+# Documentation
+/target/doc/
+
+# Temporary files
+*.tmp
+*.temp

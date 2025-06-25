@@ -35,8 +35,8 @@ impl Auth {
     /// Get the query parameter for WebSocket authentication
     pub fn query_param(&self) -> (&'static str, String) {
         match self {
-            Self::ApiKey(key) => ("apiKey", key.clone()),
-            Self::AccessToken(token) => ("accessToken", token.access_token.clone()),
+            Self::ApiKey(key) => ("api_key", key.clone()),
+            Self::AccessToken(token) => ("access_token", token.access_token.clone()),
         }
     }
 

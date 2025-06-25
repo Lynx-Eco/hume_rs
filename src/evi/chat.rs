@@ -140,6 +140,7 @@ impl ChatClient {
 }
 
 /// WebSocket connection for EVI chat
+#[derive(Debug)]
 pub struct ChatSocket {
     ws: WebSocketStream<MaybeTlsStream<TcpStream>>,
 }
@@ -408,6 +409,7 @@ pub enum ServerMessage {
 }
 
 /// Builder for chat sessions
+#[derive(Debug)]
 pub struct ChatSessionBuilder {
     config_id: Option<String>,
     config_version: Option<u32>,

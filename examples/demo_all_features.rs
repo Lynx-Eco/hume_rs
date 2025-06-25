@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("✓ API key found - full demo will run\n");
     }
     
-    let api_key = std::env::var("HUME_API_KEY").unwrap_or_else(|_| "dummy".to_string());
+    let api_key = std::env::var("HUME_API_KEY").expect("HUME_API_KEY environment variable must be set");
     let client = HumeClient::new(api_key)?;
     
     // Feature 1: Text-to-Speech

@@ -48,6 +48,7 @@ impl StreamClient {
 }
 
 /// WebSocket connection for streaming
+#[derive(Debug)]
 pub struct StreamSocket {
     ws: WebSocketStream<MaybeTlsStream<TcpStream>>,
     models: Models,
@@ -200,6 +201,7 @@ pub struct StreamPredictions {
 }
 
 /// Builder for streaming connections
+#[derive(Debug)]
 pub struct StreamBuilder {
     models: Models,
 }

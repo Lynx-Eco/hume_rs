@@ -157,6 +157,7 @@ impl CreateToolRequest {
 }
 
 /// Builder for creating tool requests
+#[derive(Debug)]
 pub struct CreateToolRequestBuilder {
     request: CreateToolRequest,
 }

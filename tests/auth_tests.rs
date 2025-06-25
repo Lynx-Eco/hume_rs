@@ -12,7 +12,7 @@ fn test_auth_api_key() {
     assert_eq!(header_value, "test-key");
     
     let (param_name, param_value) = auth.query_param();
-    assert_eq!(param_name, "apiKey");
+    assert_eq!(param_name, "api_key");
     assert_eq!(param_value, "test-key");
     
     assert!(!auth.is_expired());
@@ -33,7 +33,7 @@ fn test_auth_access_token() {
     assert_eq!(header_value, "Bearer test-token");
     
     let (param_name, param_value) = auth.query_param();
-    assert_eq!(param_name, "accessToken");
+    assert_eq!(param_name, "access_token");
     assert_eq!(param_value, "test-token");
     
     assert!(!auth.is_expired());

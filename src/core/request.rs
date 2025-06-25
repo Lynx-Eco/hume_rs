@@ -61,6 +61,7 @@ impl RequestOptions {
 }
 
 /// Builder pattern implementation for RequestOptions
+#[derive(Debug)]
 pub struct RequestOptionsBuilder {
     options: RequestOptions,
 }

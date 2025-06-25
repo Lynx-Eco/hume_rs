@@ -146,6 +146,7 @@ async fn example_formats(tts: &TtsClient, stream_handle: &rodio::OutputStreamHan
         
         let mut builder = TtsRequestBuilder::new()
             .utterance("Testing audio format.")
+            .unwrap()
             .format(format);
         
         if let Some(rate) = sample_rate {

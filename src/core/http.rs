@@ -4,14 +4,13 @@ use crate::core::{
     auth::Auth,
     error::{ApiErrorDetails, Error, Result},
     request::RequestOptions,
+    retry::{retry_with_backoff, RetryConfig},
 };
-use backoff::{ExponentialBackoff, future::retry, Error as BackoffError};
 use bytes::Bytes;
 use futures_util::{Stream, StreamExt};
 use reqwest::{header::HeaderMap, Method, Response, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use std::{pin::Pin, time::Duration};
-use tracing::debug;
 
 /// HTTP client with retry logic and error handling
 #[derive(Debug, Clone)]
@@ -159,14 +158,13 @@ impl HttpClient {
     ) -> Result<Response> {
         let url = format!("{}{}", self.base_url, path);
         let options = options.unwrap_or_default();
-        let max_retries = options.max_retries.unwrap_or(self.max_retries);
-
-        let backoff = ExponentialBackoff {
-            max_elapsed_time: Some(Duration::from_secs(60)),
+        
+        let retry_config = RetryConfig {
+            max_retries: options.max_retries.unwrap_or(self.max_retries),
             ..Default::default()
         };
 
-        retry(backoff, || async {
+        retry_with_backoff(&retry_config, || async {
             let mut request = self.client.request(method.clone(), &url);
 
             // Set auth header
@@ -195,31 +193,31 @@ impl HttpClient {
                 request = request.json(body);
             }
 
-            let response = request.send().await.map_err(|e| {
-                if e.is_timeout() {
-                    BackoffError::permanent(Error::Timeout)
-                } else if self.should_retry(&e) {
-                    debug!("Retrying request due to error: {}", e);
-                    BackoffError::transient(Error::from(e))
-                } else {
-                    BackoffError::permanent(Error::from(e))
-                }
-            })?;
-
+            let response = request.send().await?;
+            
             let status = response.status();
-            if self.should_retry_status(status) {
-                if max_retries > 0 {
-                    debug!("Retrying request due to status: {}", status);
-                    Err(BackoffError::transient(Error::other(format!(
-                        "Received retryable status: {}",
-                        status
-                    ))))
-                } else {
-                    Ok(response)
-                }
-            } else {
-                Ok(response)
+            
+            // Check if we should retry based on status
+            if status == StatusCode::TOO_MANY_REQUESTS {
+                let retry_after = response
+                    .headers()
+                    .get("retry-after")
+                    .and_then(|v| v.to_str().ok())
+                    .and_then(|v| v.parse::<u64>().ok());
+                    
+                return Err(Error::RateLimit { retry_after });
             }
+            
+            if status.is_server_error() {
+                return Err(Error::api(
+                    status.as_u16(),
+                    format!("Server error: {}", status),
+                    None,
+                    None,
+                ));
+            }
+            
+            Ok(response)
         })
         .await
     }
@@ -261,6 +259,7 @@ impl HttpClient {
 }
 
 /// Builder for creating HTTP clients
+#[derive(Debug)]
 pub struct HttpClientBuilder {
     base_url: String,
     auth: Option<Auth>,

@@ -13,10 +13,7 @@ use tokio::sync::Mutex;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
     let api_key = std::env::var("HUME_API_KEY")
-        .unwrap_or_else(|_| {
-            eprintln!("Warning: HUME_API_KEY not set. Using 'dummy' key for local testing.");
-            "dummy".to_string()
-        });
+        .expect("HUME_API_KEY environment variable must be set");
     
     let client = HumeClient::new(api_key)?;
     let tts = TtsClient::from(client);

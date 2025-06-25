@@ -183,6 +183,7 @@ impl CreateConfigRequest {
 }
 
 /// Builder for creating config requests
+#[derive(Debug)]
 pub struct CreateConfigRequestBuilder {
     request: CreateConfigRequest,
 }
